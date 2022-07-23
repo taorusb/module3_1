@@ -1,0 +1,8 @@
+FROM adoptopenjdk:11-jre-openj9
+ENV SERVER_PORT=$SERVER_PORT
+ENV IEXAPIS_TOKEN=$IEXAPIS_TOKEN
+ENV APP_THREAD_COUNT=$APP_THREAD_COUNT
+EXPOSE $SERVER_PORT
+RUN ["/bin/bash", "./gradlew build"]
+WORKDIR ./build/libs/
+ENTRYPOINT ["java", "-jar", "module3_1-0.0.1-SNAPSHOT.war"]
