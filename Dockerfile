@@ -1,8 +1,10 @@
-FROM openjdk:11.0.15-jre
+FROM openjdk:11.0.15
 ENV SERVER_PORT=$SERVER_PORT
 ENV IEXAPIS_TOKEN=$IEXAPIS_TOKEN
 ENV APP_THREAD_COUNT=$APP_THREAD_COUNT
-EXPOSE $SERVER_PORT
-RUN ["/bin/bash", "./gradlew build"]
+COPY . ./app
+WORKDIR ./app
+RUN chmod +x gradlew && ./gradlew build
 WORKDIR ./build/libs/
+EXPOSE $SERVER_PORT
 ENTRYPOINT ["java", "-jar", "module3_1-0.0.1-SNAPSHOT.war"]
