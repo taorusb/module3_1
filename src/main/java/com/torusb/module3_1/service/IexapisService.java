@@ -2,9 +2,10 @@ package com.torusb.module3_1.service;
 
 import com.torusb.module3_1.domain.Company;
 import com.torusb.module3_1.domain.Stock;
-import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -14,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@AllArgsConstructor
+
 @Service
 @Log4j2
 public class IexapisService {
@@ -23,6 +24,11 @@ public class IexapisService {
 	private static String URL_ALL;
 	private static String URL_SINGLE;
 	private final RestTemplate restTemplate;
+
+	@Autowired
+	public IexapisService(@Lazy RestTemplate restTemplate) {
+		this.restTemplate = restTemplate;
+	}
 
 	public List<Company> getCompanies() {
 		log.debug("IN getCompanies : trying to get companies");

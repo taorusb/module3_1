@@ -1,18 +1,24 @@
 package com.torusb.module3_1.domain;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.Hibernate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Transient;
+import java.util.Objects;
 import java.util.Optional;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
+@ToString
 @Entity
 public class Stock {
 
@@ -32,5 +38,22 @@ public class Stock {
 
 	public Integer getVolume() {
 		return Optional.ofNullable(volume).orElse(previousVolume);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+			return false;
+		}
+		Stock stock = (Stock) o;
+		return companyName != null && Objects.equals(companyName, stock.companyName);
+	}
+
+	@Override
+	public int hashCode() {
+		return getClass().hashCode();
 	}
 }

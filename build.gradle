@@ -26,7 +26,7 @@ ext {
 dependencies {
     implementation 'org.flywaydb:flyway-maven-plugin:5.2.4'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'com.h2database:h2'
+    implementation 'org.postgresql:postgresql:42.4.0'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
