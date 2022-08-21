@@ -1,11 +1,10 @@
 package com.torusb.module3_1;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.torusb.module3_1.domain.Company;
 import com.torusb.module3_1.domain.Stock;
 import com.torusb.module3_1.processor.GeneralProcessor;
+import com.torusb.module3_1.processor.ResultHolder;
 import com.torusb.module3_1.service.CompanyService;
 import com.torusb.module3_1.service.IexapisService;
 import com.torusb.module3_1.service.LogService;
@@ -18,9 +17,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.PrintWriter;
-import java.net.URL;
-import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executor;
@@ -44,6 +40,7 @@ class GeneralProcessorTest {
 	IexapisService iexapisService;
 	@Mock
 	CompanyService companyService;
+	ResultHolder resultHolder = new ResultHolder(new ObjectMapper());
 	ExecutorService executorService = Executors.newFixedThreadPool(8);
 	PrintWriter printWriter = new PrintWriter(System.out, true);
 	Map<String, Stock> stockMap;
@@ -55,7 +52,7 @@ class GeneralProcessorTest {
 		companyList = EntityGenerator.getCompanies();
 		generalProcessor =
 				new GeneralProcessor(stockService, logService, iexapisService,
-						printWriter, new CurrentThreadExecutor(), executorService, companyService);
+						printWriter, new CurrentThreadExecutor(), executorService, companyService, resultHolder);
 		when(iexapisService.getCompanies()).thenReturn(companyList);
 		stockMap = EntityGenerator.getRawStockPack()
 				.stream().collect(Collectors.toMap(Stock::getCompanyName, Function.identity()));
@@ -71,7 +68,6 @@ class GeneralProcessorTest {
 	void process() {
 		assertDoesNotThrow(() -> generalProcessor.process());
 	}
-
 
 	private class CurrentThreadExecutor implements Executor {
 		public void execute(Runnable r) {

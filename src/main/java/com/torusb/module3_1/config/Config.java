@@ -1,5 +1,7 @@
 package com.torusb.module3_1.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.torusb.module3_1.processor.ResultHolder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,5 +36,10 @@ public class Config {
 	@Bean
 	public Executor executor() {
 		return Thread::new;
+	}
+
+	@Bean
+	public ResultHolder resultHolder() {
+		return new ResultHolder(new ObjectMapper());
 	}
 }

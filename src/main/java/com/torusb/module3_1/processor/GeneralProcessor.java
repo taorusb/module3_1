@@ -7,7 +7,7 @@ import com.torusb.module3_1.service.LogService;
 import com.torusb.module3_1.service.IexapisService;
 import com.torusb.module3_1.service.StockService;
 import com.torusb.module3_1.utils.StockUtils;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
@@ -26,7 +26,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.stream.Collectors;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Component
 @Log4j2
 public class GeneralProcessor {
@@ -38,6 +38,7 @@ public class GeneralProcessor {
 	private final Executor executor;
 	private final ExecutorService executorService;
 	private final CompanyService companyService;
+	private final ResultHolder resultHolder;
 	private final BlockingQueue<String> queue = new PriorityBlockingQueue<>();
 	private static final String changeValueTemplate = "|%30s|%10s|%15s|%15s|%15s|";
 	private static final String topValueTemplate = "|%30s|%10s|%15s|%15s|";
@@ -116,9 +117,13 @@ public class GeneralProcessor {
 	private List<Stock> printResult(List<Stock> stocks) {
 		log.info("IN printResult : printing a result");
 		List<Pair<String, Integer>> changedValues = stockService.getChangedValue();
-		printTopValue(StockUtils.getHighestValueStocks(stocks));
+		List<Stock> topValueStocks = StockUtils.getHighestValueStocks(stocks);
+		resultHolder.setTopValueStocks(topValueStocks);
+		printTopValue(topValueStocks);
 		if (!changedValues.isEmpty()) {
-			printChangedValues(StockUtils.getChangedValueStocks(stocks, changedValues));
+			List<Stock> changedValueStocks = StockUtils.getChangedValueStocks(stocks, changedValues);
+			resultHolder.setChangedValueStocks(changedValueStocks);
+			printChangedValues(changedValueStocks);
 		}
 		return stocks;
 	}
@@ -130,7 +135,7 @@ public class GeneralProcessor {
 			printWriter.printf((topValueTemplate) + "%n", stock.getCompanyName(), stock.getCurrency(),
 					stock.getVolume(), stock.getLatestPrice())
 		);
-		printWriter.print("___________________________________________________________________________\n");
+		printWriter.print("\n");
 	}
 
 	private void printChangedValues(List<Stock> stocks) {
@@ -140,7 +145,7 @@ public class GeneralProcessor {
 			printWriter.printf((changeValueTemplate) + "%n", stock.getCompanyName(),
 					stock.getCurrency(), stock.getVolume(), stock.getLatestPrice(), stock.getChangeValue())
 		);
-		printWriter.print("__________________________________________________________________________________________\n");
+		printWriter.print("\n");
 	}
 
 	private List<Stock> writeLogToDb(List<Stock> stocks) {
