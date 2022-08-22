@@ -11,7 +11,7 @@ phases:
       - sed -i 's@DB_USER@'"$DB_USER"'@' kube-manifest/postgres-deployment.yml
       - sed -i 's@DB_PASSWORD@'"$DB_PASSWORD"'@' kube-manifest/postgres-deployment.yml
       - sed -i 's@DB_NAME@'"$DB_NAME"'@' kube-manifest/postgres-deployment.yml
-      - sed -i 's@CONTAINER_IMAGE@'"ECR_REPO_URL:$TAG"'@' kube-manifest/module3-1-deployment.yml
+      - sed -i 's@CONTAINER_IMAGE@'"$ECR_REPO_URL:$TAG"'@' kube-manifest/module3-1-deployment.yml
       - export KUBECONFIG=$HOME/.kube/config
   build:
     on-failure: ABORT
