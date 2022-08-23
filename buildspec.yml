@@ -7,11 +7,13 @@ phases:
       - docker login -u $DOCKER_LOGIN -p $DOCKER_PSWD
       - TAG="$(date +%Y-%m-%d.%H.%M.%S).$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8)"
       - echo $TAG
+      - IMAGE=$ECR_REPO_URL:$TAG
+      - echo $IMAGE
       - sed -i 's@DB_IMAGE@'"$DB_IMAGE"'@' kube-manifest/postgres-deployment.yml
       - sed -i 's@DB_USER@'"$DB_USER"'@' kube-manifest/postgres-deployment.yml
       - sed -i 's@DB_PASSWORD@'"$DB_PASSWORD"'@' kube-manifest/postgres-deployment.yml
       - sed -i 's@DB_NAME@'"$DB_NAME"'@' kube-manifest/postgres-deployment.yml
-      - sed -i 's@CONTAINER_IMAGE@'"$ECR_REPO_URL:$TAG"'@' kube-manifest/module3-1-deployment.yml
+      - sed -i 's@CONTAINER_IMAGE@'"$IMAGE"'@' kube-manifest/module3-1-deployment.yml
       - export KUBECONFIG=$HOME/.kube/config
   build:
     on-failure: ABORT
