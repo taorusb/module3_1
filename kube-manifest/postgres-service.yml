@@ -5,7 +5,7 @@ metadata:
   labels:
     app: postgres-service
 spec:
-  type: NodePort
+  clusterIP: None
   selector:
     app: postgres
   ports:

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: module3-1-service
+  labels:
+    app: module3-1-service
+spec:
+  clusterIP: None
+  selector:
+    app: module3-1
+  ports:
+    - port: 8080
+      targetPort: 8080
